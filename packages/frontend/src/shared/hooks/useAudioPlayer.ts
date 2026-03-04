@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 
-const AUDIO_SRC = '/songs/dtmf-bad-bunny.mp3'
 const POSITION_UPDATE_INTERVAL_MS = 100
 
 export interface UseAudioPlayerReturn {
@@ -16,6 +15,7 @@ export interface UseAudioPlayerReturn {
 }
 
 export function useAudioPlayer(
+  audioSrc: string,
   onTimeUpdate?: (currentTime: number) => void,
   volume: number = 1
 ): UseAudioPlayerReturn {
@@ -23,6 +23,11 @@ export function useAudioPlayer(
   const gainNodeRef = useRef<GainNode | null>(null)
   const volumeRef = useRef(volume)
   volumeRef.current = volume
+
+  // Reset Web Audio graph when switching songs so the new element gets volume control
+  useEffect(() => {
+    gainNodeRef.current = null
+  }, [audioSrc])
 
   /**
    * Uses Web Audio API GainNode for volume control. Required because iOS Safari
@@ -64,6 +69,7 @@ export function useAudioPlayer(
     onTimeUpdateRef.current?.(time)
   }, [])
 
+  // Re-attach listeners when audioSrc changes (element remounts with key={audioSrc})
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
@@ -91,7 +97,7 @@ export function useAudioPlayer(
       audio.removeEventListener('ended', handleEnded)
       if (tickRef.current) clearInterval(tickRef.current)
     }
-  }, [])
+  }, [audioSrc])
 
   useEffect(() => {
     if (!isPlaying) {
@@ -174,6 +180,6 @@ export function useAudioPlayer(
     toggle,
     seek,
     audioRef,
-    audioSrc: AUDIO_SRC,
+    audioSrc,
   }
 }

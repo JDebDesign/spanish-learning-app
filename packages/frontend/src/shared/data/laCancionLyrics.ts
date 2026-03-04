@@ -1,0 +1,77 @@
+/**
+ * La Canción - J Balvin & Bad Bunny
+ * Lyric timings from LRC - synced with actual song audio.
+ * Source: LRC [length: 04:03.86]
+ */
+import type { LyricLineTiming } from './lyricsTiming'
+
+/** Convert mm:ss.xx to milliseconds */
+function lrcMs(min: number, sec: number) {
+  return (min * 60 + sec) * 1000
+}
+
+export const laCancionLyrics: LyricLineTiming[] = [
+  { id: 'lc1', spanishText: 'Yeh, yeh, yeh', englishText: 'Yeh, yeh, yeh', startMs: lrcMs(0, 5.12), endMs: lrcMs(0, 9.36) },
+  { id: 'lc2', spanishText: "Pensaba que te había olvida'o, eh", englishText: "I thought I had forgotten you, eh", startMs: lrcMs(0, 9.64), endMs: lrcMs(0, 14.17) },
+  { id: 'lc3', spanishText: 'Pero pusieron la canción, eh, eh, eh', englishText: 'But they played the song, eh, eh, eh', startMs: lrcMs(0, 14.17), endMs: lrcMs(0, 20.76) },
+  { id: 'lc4', spanishText: "Que cantamo' bien borracho'", englishText: "That we sang really drunk", startMs: lrcMs(0, 20.76), endMs: lrcMs(0, 24.20) },
+  { id: 'lc5', spanishText: "Que bailamo' bien borracho'", englishText: "That we danced really drunk", startMs: lrcMs(0, 24.20), endMs: lrcMs(0, 27.19) },
+  { id: 'lc6', spanishText: "Nos besamo' bien borracho' los dos", englishText: "We kissed really drunk, the two of us", startMs: lrcMs(0, 27.19), endMs: lrcMs(0, 31.49) },
+  { id: 'lc7', spanishText: "Pensaba que te había olvida'o, eh", englishText: "I thought I had forgotten you, eh", startMs: lrcMs(0, 31.49), endMs: lrcMs(0, 36.38) },
+  { id: 'lc8', spanishText: 'Pero pusieron la canción, eh, eh, eh', englishText: 'But they played the song, eh, eh, eh', startMs: lrcMs(0, 36.38), endMs: lrcMs(0, 43.48) },
+  { id: 'lc9', spanishText: "Que cantamo' bien borracho'", englishText: "That we sang really drunk", startMs: lrcMs(0, 43.48), endMs: lrcMs(0, 46.28) },
+  { id: 'lc10', spanishText: "Que bailamo' bien borracho'", englishText: "That we danced really drunk", startMs: lrcMs(0, 46.28), endMs: lrcMs(0, 48.81) },
+  { id: 'lc11', spanishText: "Nos besamo' bien borracho' los dos", englishText: "We kissed really drunk, the two of us", startMs: lrcMs(0, 48.81), endMs: lrcMs(0, 52.57) },
+  { id: 'lc12', spanishText: "Pensaba que te había olvida'o", englishText: "I thought I had forgotten you", startMs: lrcMs(0, 52.57), endMs: lrcMs(0, 54.75) },
+  { id: 'lc13', spanishText: 'Justo cuando creía', englishText: 'Just when I believed', startMs: lrcMs(0, 54.75), endMs: lrcMs(0, 56.32) },
+  { id: 'lc14', spanishText: "Que por comerme a do' o diez, te olvidaría' (Yeh)", englishText: "That by having two or ten, I'd forget you (Yeh)", startMs: lrcMs(0, 56.32), endMs: lrcMs(1, 0.29) },
+  { id: 'lc15', spanishText: 'Cogí un respiro y me salí de la vía', englishText: 'I took a breath and got off the path', startMs: lrcMs(1, 0.29), endMs: lrcMs(1, 2.71) },
+  { id: 'lc16', spanishText: 'Y como un pendejo, no sabía lo que hacía', englishText: "And like an idiot, I didn't know what I was doing", startMs: lrcMs(1, 2.71), endMs: lrcMs(1, 4.42) },
+  { id: 'lc17', spanishText: 'Nunca lo superé, nunca te superé (No; no)', englishText: "I never got over it, I never got over you (No; no)", startMs: lrcMs(1, 4.42), endMs: lrcMs(1, 8.31) },
+  { id: 'lc18', spanishText: "Hasta me aprendí to'a la' balada' en inglé' (Yeh)", englishText: "I even learned all the ballads in English (Yeh)", startMs: lrcMs(1, 8.31), endMs: lrcMs(1, 10.95) },
+  { id: 'lc19', spanishText: 'Respiré y conté hasta tres (Uno, dos, tres)', englishText: 'I breathed and counted to three (One, two, three)', startMs: lrcMs(1, 10.95), endMs: lrcMs(1, 12.99) },
+  { id: 'lc20', spanishText: "Ere' la fantasía oscura de Kanye West, bebé, ey", englishText: "You're Kanye West's dark fantasy, baby, ey", startMs: lrcMs(1, 12.99), endMs: lrcMs(1, 16.15) },
+  { id: 'lc21', spanishText: 'Hace tiempo lo barato me salió caro (Yih)', englishText: 'A while ago the cheap cost me dear (Yih)', startMs: lrcMs(1, 16.15), endMs: lrcMs(1, 19.07) },
+  { id: 'lc22', spanishText: "Yo solo twitteo, bala' loca' disparo (Yih)", englishText: "I just tweet, I shoot crazy bullets (Yih)", startMs: lrcMs(1, 19.07), endMs: lrcMs(1, 21.78) },
+  { id: 'lc23', spanishText: '¿Cómo olvidar la bellaquera en el carro?', englishText: 'How to forget the wildness in the car?', startMs: lrcMs(1, 21.78), endMs: lrcMs(1, 24.45) },
+  { id: 'lc24', spanishText: '¿A que guió solo?', englishText: 'Who did I guide alone?', startMs: lrcMs(1, 24.45), endMs: lrcMs(1, 26.37) },
+  { id: 'lc25', spanishText: "Pensaba que te había' olvida'o (Pero no), yeh", englishText: "I thought I had forgotten you (But no), yeh", startMs: lrcMs(1, 26.37), endMs: lrcMs(1, 30.35) },
+  { id: 'lc26', spanishText: 'Pero pusieron la canción, yeh, yeh', englishText: 'But they played the song, yeh, yeh', startMs: lrcMs(1, 30.35), endMs: lrcMs(1, 36.52) },
+  { id: 'lc27', spanishText: 'Que cantamos bien borrachos', englishText: 'That we sang really drunk', startMs: lrcMs(1, 36.52), endMs: lrcMs(1, 40.52) },
+  { id: 'lc28', spanishText: "Que bailamo' bien borrachos", englishText: "That we danced really drunk", startMs: lrcMs(1, 40.52), endMs: lrcMs(1, 43.61) },
+  { id: 'lc29', spanishText: "Nos besamo' bien borracho' lo' dos", englishText: "We kissed really drunk, the two of us", startMs: lrcMs(1, 43.61), endMs: lrcMs(1, 47.75) },
+  { id: 'lc30', spanishText: "Pensaba que te había' olvida'o, eh", englishText: "I thought I had forgotten you, eh", startMs: lrcMs(1, 47.75), endMs: lrcMs(1, 52.82) },
+  { id: 'lc31', spanishText: 'Pero pusieron la canción, yeh, yeh', englishText: 'But they played the song, yeh, yeh', startMs: lrcMs(1, 52.82), endMs: lrcMs(1, 59.60) },
+  { id: 'lc32', spanishText: "Que cantamo' bien borracho'", englishText: "That we sang really drunk", startMs: lrcMs(1, 59.60), endMs: lrcMs(2, 2.60) },
+  { id: 'lc33', spanishText: "Que bailamo' bien borracho'", englishText: "That we danced really drunk", startMs: lrcMs(2, 2.60), endMs: lrcMs(2, 5.11) },
+  { id: 'lc34', spanishText: "Nos besamo' bien borracho' los dos, ey, ey", englishText: "We kissed really drunk, the two of us, ey, ey", startMs: lrcMs(2, 5.11), endMs: lrcMs(2, 10.81) },
+  { id: 'lc35', spanishText: "Y hace tiempo que no venía' a mi cabeza", englishText: "And it's been a while since you came to my mind", startMs: lrcMs(2, 10.81), endMs: lrcMs(2, 14.12) },
+  { id: 'lc36', spanishText: "Pero ya van par de cerveza'", englishText: "But a couple of beers in", startMs: lrcMs(2, 14.12), endMs: lrcMs(2, 16.06) },
+  { id: 'lc37', spanishText: "Y me acordé de cómo tú me besa'", englishText: "And I remembered how you used to kiss me", startMs: lrcMs(2, 16.06), endMs: lrcMs(2, 18.70) },
+  { id: 'lc38', spanishText: "De to' lo' polvo' encima 'e la mesa", englishText: "Of all the dust on top of the table", startMs: lrcMs(2, 18.70), endMs: lrcMs(2, 21.44) },
+  { id: 'lc39', spanishText: 'Y en el carro, la playa, y el motel', englishText: 'And in the car, the beach, and the motel', startMs: lrcMs(2, 21.44), endMs: lrcMs(2, 24.45) },
+  { id: 'lc40', spanishText: "En casa de tu pai', cuando yo te iba a ver", englishText: "At your dad's house, when I used to go see you", startMs: lrcMs(2, 24.45), endMs: lrcMs(2, 27.06) },
+  { id: 'lc41', spanishText: "Las vece' que tu mai' no' llegó a coger", englishText: "The times your mom almost caught us", startMs: lrcMs(2, 27.06), endMs: lrcMs(2, 29.66) },
+  { id: 'lc42', spanishText: "Tú brincando mojaíta', sudando Chanel", englishText: "You jumping all wet, sweating Chanel", startMs: lrcMs(2, 29.66), endMs: lrcMs(2, 32.54) },
+  { id: 'lc43', spanishText: "Yo sé que lo nuestro e' cosa de ayer", englishText: "I know what we had is a thing of the past", startMs: lrcMs(2, 32.54), endMs: lrcMs(2, 34.81) },
+  { id: 'lc44', spanishText: 'Y me pone contento que te va bien con él', englishText: "And it makes me happy that things go well for you with him", startMs: lrcMs(2, 34.81), endMs: lrcMs(2, 37.67) },
+  { id: 'lc45', spanishText: 'Yo ni te extrañaba ni te quería ver', englishText: "I wasn't even missing you or wanted to see you", startMs: lrcMs(2, 37.67), endMs: lrcMs(2, 40.13) },
+  { id: 'lc46', spanishText: 'Pero pusieron la canción que te gustaba poner', englishText: 'But they played the song you used to like to play', startMs: lrcMs(2, 40.13), endMs: lrcMs(2, 42.99) },
+  { id: 'lc47', spanishText: 'Y me acordé de ti, cuando me hiciste feliz', englishText: 'And I remembered you, when you made me happy', startMs: lrcMs(2, 42.99), endMs: lrcMs(2, 46.51) },
+  { id: 'lc48', spanishText: 'Se acabó, pues, me fui, ey', englishText: "It ended, well, I left, ey", startMs: lrcMs(2, 46.51), endMs: lrcMs(2, 49.54) },
+  { id: 'lc49', spanishText: 'Yo mismo me río de mí porque—', englishText: 'I laugh at myself because—', startMs: lrcMs(2, 49.54), endMs: lrcMs(2, 53.53) },
+  { id: 'lc50', spanishText: "Pensaba que te había' olvida'o, eh", englishText: "I thought I had forgotten you, eh", startMs: lrcMs(2, 53.53), endMs: lrcMs(2, 58.31) },
+  { id: 'lc51', spanishText: 'Pero pusieron la canción, yeh, yeh', englishText: 'But they played the song, yeh, yeh', startMs: lrcMs(2, 58.31), endMs: lrcMs(3, 5.92) },
+  { id: 'lc52', spanishText: 'Que cantamos bien borrachos', englishText: 'That we sang really drunk', startMs: lrcMs(3, 5.92), endMs: lrcMs(3, 8.49) },
+  { id: 'lc53', spanishText: "Que bailamo' bien borrachos", englishText: "That we danced really drunk", startMs: lrcMs(3, 8.49), endMs: lrcMs(3, 10.26) },
+  { id: 'lc54', spanishText: "Nos besamo' bien borracho' lo' do'", englishText: "We kissed really drunk, the two of us", startMs: lrcMs(3, 10.26), endMs: lrcMs(3, 14.63) },
+  { id: 'lc55', spanishText: '[Interludio Instrumental]', englishText: '[Instrumental Interlude]', startMs: lrcMs(3, 14.63), endMs: lrcMs(3, 27.03) },
+  { id: 'lc56', spanishText: "Y yo pensaba que tu nombre estaba muerto, eh", englishText: "And I thought your name was dead, eh", startMs: lrcMs(3, 27.03), endMs: lrcMs(3, 31.26) },
+  { id: 'lc57', spanishText: 'Pero te soñé despierto, ey', englishText: 'But I dreamed of you awake, ey', startMs: lrcMs(3, 31.26), endMs: lrcMs(3, 33.56) },
+  { id: 'lc58', spanishText: "Hoy salí pa' la calle suelto", englishText: "Today I went out to the street free", startMs: lrcMs(3, 33.56), endMs: lrcMs(3, 35.14) },
+  { id: 'lc59', spanishText: "Sin sentimiento', el corazón desierto", englishText: "Without feelings, my heart deserted", startMs: lrcMs(3, 35.14), endMs: lrcMs(3, 37.55) },
+  { id: 'lc60', spanishText: 'Y yo pensaba que tu nombre estaba muerto', englishText: "And I thought your name was dead", startMs: lrcMs(3, 37.55), endMs: lrcMs(3, 41.66) },
+  { id: 'lc61', spanishText: 'Pero te soñé despierto', englishText: 'But I dreamed of you awake', startMs: lrcMs(3, 41.66), endMs: lrcMs(3, 43.27) },
+  { id: 'lc62', spanishText: "Hoy salí pa' la calle suelto", englishText: "Today I went out to the street free", startMs: lrcMs(3, 43.27), endMs: lrcMs(3, 45.72) },
+  { id: 'lc63', spanishText: "Sin sentimiento', el corazón desierto", englishText: "Without feelings, my heart deserted", startMs: lrcMs(3, 45.72), endMs: lrcMs(4, 3.86) },
+]

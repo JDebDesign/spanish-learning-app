@@ -1,13 +1,13 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import {
   Box,
-  Typography,
   IconButton,
   Paper,
   Slider,
   ButtonBase,
   Popover,
   ClickAwayListener,
+  Snackbar,
 } from '@mui/material'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
 import FastRewindIcon from '@mui/icons-material/FastRewind'
@@ -18,12 +18,15 @@ import SkipNextIcon from '@mui/icons-material/SkipNext'
 import RepeatIcon from '@mui/icons-material/Repeat'
 import RepeatOneIcon from '@mui/icons-material/RepeatOne'
 import { ChorusLine, CLICKABLE_WORD_SELECTOR } from './components/ChorusLine'
+import { SongDropdown } from './components/SongDropdown'
 import { WordTooltip } from './components/WordTooltip'
+import { SONG_CATALOG } from '@/shared/data/songCatalog'
+import { SONG_DATA } from '@/shared/data/songData'
 import { useAudioPlayer } from '@/shared/hooks/useAudioPlayer'
 import { useWakeLockContext } from '@/shared/contexts/WakeLockContext'
 import { getActiveLineIndex } from '@/shared/utils/getActiveLineIndex'
-import { lyricsWithTiming } from '@/shared/data/lyricsTiming'
-import { mockChorusData, getTokensForLine } from '@/shared/data/mockChorus'
+import { getTokensForLine } from '@/shared/data/mockChorus'
+import type { LyricLineTiming } from '@/shared/data/lyricsTiming'
 import { WaveformTimingTool } from './components/WaveformTimingTool'
 import type { WordToken } from '@/shared/types/chorus'
 
@@ -34,8 +37,8 @@ const REPEAT_CYCLE: RepeatMode[] = ['off', 'once', 'forever']
 const LOOP_EPSILON_S = 0.05
 
 /** Merge timing data with token data for word tooltips */
-function getMergedLines() {
-  return lyricsWithTiming.map((timingLine) => ({
+function getMergedLines(lyrics: LyricLineTiming[]) {
+  return lyrics.map((timingLine) => ({
     ...timingLine,
     tokens: getTokensForLine(timingLine.spanishText),
   }))
@@ -51,30 +54,41 @@ export function ChorusPlayer() {
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('off')
   const [loopTargetLineId, setLoopTargetLineId] = useState<string | null>(null)
   const [loopCount, setLoopCount] = useState(0)
+  const [selectedSongId, setSelectedSongId] = useState('dtmf')
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
   const volumeAutoHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const VOLUME_AUTO_HIDE_MS = 2500
+  const showToast = useCallback((message: string) => {
+    setToastMessage(message)
+  }, [])
   const lastScrolledIndexRef = useRef(-1)
   const linesContainerRef = useRef<HTMLDivElement>(null)
   const lineRefsRef = useRef<(HTMLDivElement | null)[]>([])
   const lastLoopHandledRef = useRef<string | null>(null)
 
   const { requestWakeLock } = useWakeLockContext()
-  const mergedLines = getMergedLines()
+  const currentSongData = SONG_DATA[selectedSongId] ?? SONG_DATA.dtmf
+  const lyrics = currentSongData.lyrics
+  const mergedLines = getMergedLines(lyrics)
 
-  const handleTimeUpdate = useCallback((currentTime: number) => {
-    const index = getActiveLineIndex(currentTime, lyricsWithTiming)
-    setActiveLineIndex(index)
-  }, [])
+  const handleTimeUpdate = useCallback(
+    (currentTime: number) => {
+      const index = getActiveLineIndex(currentTime, lyrics)
+      setActiveLineIndex(index)
+    },
+    [lyrics]
+  )
 
   const {
     isPlaying,
     duration,
     currentTime,
     toggle,
+    pause,
     seek,
     audioRef,
     audioSrc,
-  } = useAudioPlayer(handleTimeUpdate, volume)
+  } = useAudioPlayer(currentSongData.audioSrc, handleTimeUpdate, volume)
 
   // Line-repeat loop: when playing and repeat on, seek back to loop start when we pass loop end
   useEffect(() => {
@@ -113,7 +127,24 @@ export function ChorusPlayer() {
       }
     }
   }, [isPlaying, repeatMode, loopTargetLineId, loopCount, currentTime, mergedLines, seek, audioRef])
-  const { songTitle, artist } = mockChorusData
+
+  const currentSong = SONG_CATALOG.find((s) => s.id === selectedSongId) ?? SONG_CATALOG[0]
+
+  const handleSelectSong = useCallback(
+    (song: { id: string; title: string; artist: string }) => {
+      if (song.id === selectedSongId) return
+      pause()
+      seek(0)
+      setActiveLineIndex(-1)
+      setRepeatMode('off')
+      setLoopTargetLineId(null)
+      setLoopCount(0)
+      setSelectedSongId(song.id)
+      lastScrolledIndexRef.current = -1
+      linesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+    },
+    [selectedSongId, pause, seek]
+  )
 
   // Scroll active line into view when it changes
   useEffect(() => {
@@ -128,7 +159,7 @@ export function ChorusPlayer() {
   const handleLineClick = useCallback(
     (index: number, wasPlaying: boolean) => {
       requestWakeLock()
-      const line = lyricsWithTiming[index]
+      const line = lyrics[index]
       if (!line) return
       seek(line.startMs / 1000)
       setActiveLineIndex(index)
@@ -141,7 +172,7 @@ export function ChorusPlayer() {
         audioRef.current?.play().catch(() => {})
       }
     },
-    [requestWakeLock, seek, audioRef, repeatMode]
+    [requestWakeLock, seek, audioRef, repeatMode, lyrics]
   )
 
   const handleProgressChange = useCallback(
@@ -156,9 +187,15 @@ export function ChorusPlayer() {
     const nextIndex = (REPEAT_CYCLE.indexOf(repeatMode) + 1) % REPEAT_CYCLE.length
     const next = REPEAT_CYCLE[nextIndex]
     setRepeatMode(next)
+    const repeatMessages: Record<RepeatMode, string> = {
+      off: 'Repeat off',
+      once: 'Repeat current line once',
+      forever: 'Repeat current line continuously',
+    }
+    showToast(repeatMessages[next])
     if (next !== 'off') {
       const lineIndex = activeLineIndex >= 0 ? activeLineIndex : lastScrolledIndexRef.current
-      const line = lyricsWithTiming[lineIndex]
+      const line = lyrics[lineIndex]
       if (line) {
         setLoopTargetLineId(line.id)
         setLoopCount(0)
@@ -169,37 +206,40 @@ export function ChorusPlayer() {
       setLoopTargetLineId(null)
       setLoopCount(0)
     }
-  }, [repeatMode, activeLineIndex])
+  }, [repeatMode, activeLineIndex, lyrics, showToast])
 
   const handleRestart = useCallback(() => {
     requestWakeLock()
     seek(0)
     if (isPlaying) audioRef.current?.play().catch(() => {})
     linesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [requestWakeLock, seek, isPlaying, audioRef])
+    showToast('Restart song from the beginning')
+  }, [requestWakeLock, seek, isPlaying, audioRef, showToast])
 
   const handleSkipPrevious = useCallback(() => {
     requestWakeLock()
     const targetIndex = activeLineIndex <= 0 ? 0 : activeLineIndex - 1
-    const line = lyricsWithTiming[targetIndex]
+    const line = lyrics[targetIndex]
     if (!line) return
     seek(line.startMs / 1000)
     setActiveLineIndex(targetIndex)
     lastScrolledIndexRef.current = targetIndex
     if (isPlaying) audioRef.current?.play().catch(() => {})
-  }, [requestWakeLock, activeLineIndex, seek, isPlaying, audioRef])
+    showToast('Go to previous lyric')
+  }, [requestWakeLock, activeLineIndex, seek, isPlaying, audioRef, lyrics, showToast])
 
   const handleSkipNext = useCallback(() => {
     requestWakeLock()
-    const lastIndex = lyricsWithTiming.length - 1
+    const lastIndex = lyrics.length - 1
     const targetIndex = activeLineIndex < 0 ? 0 : Math.min(lastIndex, activeLineIndex + 1)
-    const line = lyricsWithTiming[targetIndex]
+    const line = lyrics[targetIndex]
     if (!line) return
     seek(line.startMs / 1000)
     setActiveLineIndex(targetIndex)
     lastScrolledIndexRef.current = targetIndex
     if (isPlaying) audioRef.current?.play().catch(() => {})
-  }, [requestWakeLock, activeLineIndex, seek, isPlaying, audioRef])
+    showToast('Go to next lyric')
+  }, [requestWakeLock, activeLineIndex, seek, isPlaying, audioRef, lyrics, showToast])
 
   const handleWordClick = useCallback((e: React.MouseEvent<HTMLElement>, token: WordToken) => {
     setTooltipAnchor(e.currentTarget)
@@ -312,7 +352,11 @@ export function ChorusPlayer() {
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <IconButton
               size="small"
-              onClick={() => setShowEnglish((v) => !v)}
+              onClick={() => {
+                const next = !showEnglish
+                setShowEnglish(next)
+                showToast(next ? 'English shown' : 'English hidden')
+              }}
               sx={{
                 color: showEnglish ? '#e9d5ff' : '#71717a',
                 bgcolor: showEnglish ? 'rgba(233, 213, 255, 0.15)' : 'transparent',
@@ -327,13 +371,12 @@ export function ChorusPlayer() {
               EN
             </IconButton>
           </Box>
-          <Box sx={{ textAlign: 'center', flex: 1, px: 1 }}>
-            <Typography sx={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 20, color: '#f9fafb' }}>
-              {songTitle}
-            </Typography>
-            <Typography sx={{ fontFamily: 'Inter', fontWeight: 500, fontSize: 14, color: '#c7b8e6' }}>
-              {artist}
-            </Typography>
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', px: 1 }}>
+            <SongDropdown
+              currentSong={currentSong}
+              songs={SONG_CATALOG}
+              onSelectSong={handleSelectSong}
+            />
           </Box>
           <IconButton
             size="small"
@@ -452,6 +495,7 @@ export function ChorusPlayer() {
             onClick={() => {
               requestWakeLock()
               toggle()
+              showToast(isPlaying ? 'Paused' : 'Playing')
             }}
             sx={{
               position: 'absolute',
@@ -503,12 +547,36 @@ export function ChorusPlayer() {
           </Box>
         </Box>
         <audio
+          key={audioSrc}
           ref={audioRef}
           src={audioSrc}
           style={{ display: 'none' }}
           preload="metadata"
         />
       </Paper>
+
+      <Snackbar
+        open={Boolean(toastMessage)}
+        message={toastMessage}
+        onClose={() => setToastMessage(null)}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          bottom: { xs: 'calc(120px + env(safe-area-inset-bottom, 0px))', sm: 120 },
+          '& .MuiSnackbar-content, & .MuiSnackbarContent-root': {
+            bgcolor: '#1b1436',
+            color: '#e9d5ff',
+            border: '1px solid #4a2f7a',
+            borderRadius: 2,
+            py: 0.75,
+            px: 1.5,
+            minWidth: 'auto',
+            fontSize: 13,
+            transform: 'scale(0.5)',
+            transformOrigin: 'bottom center',
+          },
+        }}
+      />
 
       <WordTooltip
         anchorEl={tooltipAnchor}

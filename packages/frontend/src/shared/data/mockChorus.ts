@@ -1,4 +1,8 @@
 import type { ChorusData, WordToken } from '../types/chorus'
+import { TELEPATIA_TOKENS } from './telepatiaTokens'
+import { BAILE_INOLVIDABLE_TOKENS } from './baileInolvidableTokens'
+import { LA_CANCION_TOKENS } from './laCancionTokens'
+import { TITI_ME_PREGUNTO_TOKENS } from './titiMePreguntoTokens'
 
 /** Token database keyed by spanishText - used for lines with detailed word glosses */
 const TOKEN_MAP: Record<string, WordToken[]> = {
@@ -499,6 +503,10 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
     { spanishWord: 'me', englishGloss: 'me (object)', lemma: 'yo', grammarNote: 'First-person object pronoun' },
     { spanishWord: 'ayude', englishGloss: 'help me', lemma: 'ayudar', grammarNote: 'Third-person singular present subjunctive', contextInSong: 'His friend should take care of him.' },
   ],
+  ...TELEPATIA_TOKENS,
+  ...BAILE_INOLVIDABLE_TOKENS,
+  ...LA_CANCION_TOKENS,
+  ...TITI_ME_PREGUNTO_TOKENS,
 }
 
 /** Normalize word for lookup: lowercase, trim, remove trailing punctuation. */
