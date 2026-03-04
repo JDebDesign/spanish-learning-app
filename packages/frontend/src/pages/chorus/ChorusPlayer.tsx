@@ -59,7 +59,7 @@ export function ChorusPlayer() {
     seek,
     audioRef,
     audioSrc,
-  } = useAudioPlayer(handleTimeUpdate)
+  } = useAudioPlayer(handleTimeUpdate, volume)
 
   const mergedLines = getMergedLines()
   const { songTitle, artist } = mockChorusData
@@ -132,12 +132,6 @@ export function ChorusPlayer() {
       window.speechSynthesis.addEventListener('voiceschanged', () => {})
     }
   }, [])
-
-  // Sync volume to audio element
-  useEffect(() => {
-    const audio = audioRef.current
-    if (audio) audio.volume = volume
-  }, [volume, audioRef])
 
   const handleVolumeClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
     setVolumeAnchor((prev) => (prev ? null : e.currentTarget))

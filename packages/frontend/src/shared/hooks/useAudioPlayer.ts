@@ -16,9 +16,39 @@ export interface UseAudioPlayerReturn {
 }
 
 export function useAudioPlayer(
-  onTimeUpdate?: (currentTime: number) => void
+  onTimeUpdate?: (currentTime: number) => void,
+  volume: number = 1
 ): UseAudioPlayerReturn {
   const audioRef = useRef<HTMLAudioElement>(null)
+  const gainNodeRef = useRef<GainNode | null>(null)
+  const volumeRef = useRef(volume)
+  volumeRef.current = volume
+
+  /**
+   * Uses Web Audio API GainNode for volume control. Required because iOS Safari
+   * ignores HTMLAudioElement.volume (it is read-only and always 1 on iOS).
+   * Sets up the graph on first play (user gesture) and reuses it.
+   */
+  const ensureAudioGraph = useCallback(() => {
+    const audio = audioRef.current
+    if (!audio || gainNodeRef.current) return gainNodeRef.current
+
+    try {
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      if (!AudioContextClass) return null
+
+      const ctx = new AudioContextClass()
+      const source = ctx.createMediaElementSource(audio)
+      const gainNode = ctx.createGain()
+      source.connect(gainNode)
+      gainNode.connect(ctx.destination)
+      gainNode.gain.value = volumeRef.current
+      gainNodeRef.current = gainNode
+      return gainNode
+    } catch {
+      return null
+    }
+  }, [])
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
@@ -80,9 +110,30 @@ export function useAudioPlayer(
     }
   }, [isPlaying, updateTime])
 
+  // Sync volume to GainNode (iOS) or audio.volume (desktop fallback)
+  useEffect(() => {
+    const audio = audioRef.current
+    const gain = gainNodeRef.current
+    if (gain) {
+      gain.gain.value = volume
+    } else if (audio) {
+      audio.volume = volume
+    }
+  }, [volume])
+
   const play = useCallback(() => {
-    audioRef.current?.play().catch(() => {})
-  }, [])
+    const audio = audioRef.current
+    if (!audio) return
+    const gainNode = ensureAudioGraph()
+    if (gainNode) {
+      const ctx = gainNode.context as AudioContext
+      if (ctx.state === 'suspended') ctx.resume()
+      gainNode.gain.value = volumeRef.current
+    } else {
+      audio.volume = volumeRef.current
+    }
+    audio.play().catch(() => {})
+  }, [ensureAudioGraph])
 
   const pause = useCallback(() => {
     audioRef.current?.pause()
@@ -92,11 +143,19 @@ export function useAudioPlayer(
     const audio = audioRef.current
     if (!audio) return
     if (audio.paused) {
+      const gainNode = ensureAudioGraph()
+      if (gainNode) {
+        const ctx = gainNode.context as AudioContext
+        if (ctx.state === 'suspended') ctx.resume()
+        gainNode.gain.value = volumeRef.current
+      } else {
+        audio.volume = volumeRef.current
+      }
       audio.play().catch(() => {})
     } else {
       audio.pause()
     }
-  }, [])
+  }, [ensureAudioGraph])
 
   const seek = useCallback((timeSeconds: number) => {
     const audio = audioRef.current
