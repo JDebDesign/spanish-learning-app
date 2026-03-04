@@ -24,9 +24,16 @@ export function useAudioPlayer(
   const volumeRef = useRef(volume)
   volumeRef.current = volume
 
-  // Reset Web Audio graph when switching songs so the new element gets volume control
+  // Reset Web Audio graph and playback state when switching songs
   useEffect(() => {
     gainNodeRef.current = null
+    setIsPlaying(false)
+    setCurrentTime(0)
+    setDuration(0)
+    if (tickRef.current) {
+      clearInterval(tickRef.current)
+      tickRef.current = null
+    }
   }, [audioSrc])
 
   /**
