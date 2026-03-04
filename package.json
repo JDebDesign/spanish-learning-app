@@ -1,0 +1,12 @@
+{
+  "name": "spanish-learning-app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "frontend:dev": "npm run dev --workspace=packages/frontend",
+    "frontend:build": "npm run build --workspace=packages/frontend"
+  },
+  "workspaces": [
+    "packages/frontend"
+  ]
+}
