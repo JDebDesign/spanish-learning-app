@@ -30,8 +30,7 @@ const ENABLE_TIMING_TOOL = false
 
 type RepeatMode = 'off' | 'once' | 'forever'
 const REPEAT_CYCLE: RepeatMode[] = ['off', 'once', 'forever']
-/** Cut playback 50ms before line end to prevent bleed into next line. Tune per device if needed. */
-const CUT_OFF_EPSILON_S = 0.05
+const LOOP_EPSILON_S = 0.05
 
 /** Merge timing data with token data for word tooltips */
 function getMergedLines() {
@@ -56,8 +55,7 @@ export function ChorusPlayer() {
   const lastScrolledIndexRef = useRef(-1)
   const linesContainerRef = useRef<HTMLDivElement>(null)
   const lineRefsRef = useRef<(HTMLDivElement | null)[]>([])
-  const loopCountRef = useRef(0)
-  loopCountRef.current = loopCount
+  const lastLoopHandledRef = useRef<string | null>(null)
 
   const mergedLines = getMergedLines()
 
@@ -76,60 +74,43 @@ export function ChorusPlayer() {
     audioSrc,
   } = useAudioPlayer(handleTimeUpdate, volume)
 
-  // rAF-based repeat loop: hard cutoff before next line, no bleed. Runs only when repeat active.
+  // Line-repeat loop: when playing and repeat on, seek back to loop start when we pass loop end
   useEffect(() => {
     if (!isPlaying || repeatMode === 'off' || !loopTargetLineId) return
     const line = mergedLines.find((l) => l.id === loopTargetLineId)
     if (!line || line.startMs == null || line.endMs == null) return
-
     const loopStart = line.startMs / 1000
-    const effectiveEnd = line.endMs / 1000 - CUT_OFF_EPSILON_S
-    const lines = mergedLines
+    const loopEnd = line.endMs / 1000
+    if (currentTime < loopEnd - LOOP_EPSILON_S) {
+      lastLoopHandledRef.current = null
+      return
+    }
+    const key = `${loopTargetLineId}-${loopCount}`
+    if (lastLoopHandledRef.current === key) return
+    lastLoopHandledRef.current = key
 
-    let rafId: number
-
-    const tick = () => {
-      const audio = audioRef.current
-      const mode = repeatMode
-      const targetId = loopTargetLineId
-      if (!audio || !targetId) return
-
-      const ct = audio.currentTime
-      if (ct < effectiveEnd) {
-        rafId = requestAnimationFrame(tick)
-        return
-      }
-
-      // At or past effective end – cut immediately, same tick to avoid bleed
-      if (mode === 'forever') {
+    if (repeatMode === 'forever') {
+      seek(loopStart)
+      audioRef.current?.play().catch(() => {})
+    } else if (repeatMode === 'once') {
+      if (loopCount === 0) {
         seek(loopStart)
-        audio.play().catch(() => {})
-      } else if (mode === 'once') {
-        const count = loopCountRef.current
-        if (count === 0) {
-          seek(loopStart)
-          setLoopCount(1)
-          audio.play().catch(() => {})
+        setLoopCount(1)
+        audioRef.current?.play().catch(() => {})
+      } else {
+        const idx = mergedLines.findIndex((l) => l.id === loopTargetLineId)
+        const nextLine = mergedLines[idx + 1]
+        if (nextLine) {
+          setLoopTargetLineId(nextLine.id)
+          setLoopCount(0)
         } else {
-          const idx = lines.findIndex((l) => l.id === targetId)
-          const nextLine = lines[idx + 1]
-          if (nextLine && nextLine.startMs != null) {
-            seek(nextLine.startMs / 1000)
-            setLoopTargetLineId(nextLine.id)
-            setLoopCount(0)
-          } else {
-            setRepeatMode('off')
-            setLoopTargetLineId(null)
-            setLoopCount(0)
-          }
+          setRepeatMode('off')
+          setLoopTargetLineId(null)
+          setLoopCount(0)
         }
       }
-      rafId = requestAnimationFrame(tick)
     }
-
-    rafId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafId)
-  }, [isPlaying, repeatMode, loopTargetLineId, mergedLines, audioRef, seek])
+  }, [isPlaying, repeatMode, loopTargetLineId, loopCount, currentTime, mergedLines, seek, audioRef])
   const { songTitle, artist } = mockChorusData
 
   // Scroll active line into view when it changes
