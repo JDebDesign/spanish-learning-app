@@ -275,7 +275,7 @@ export function ChorusPlayer() {
                     transition: 'all 0.2s ease',
                   }}
                 >
-                  <ChorusLine line={line} onWordClick={handleWordClick} showEnglish={showEnglish} />
+                  <ChorusLine line={line} onWordClick={handleWordClick} showEnglish={showEnglish} selectedToken={tooltipToken} />
                 </Box>
               </ButtonBase>
             )

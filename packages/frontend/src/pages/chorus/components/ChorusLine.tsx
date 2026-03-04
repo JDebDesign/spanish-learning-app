@@ -2,10 +2,17 @@ import { useMemo } from 'react'
 import { Box, Typography, ButtonBase } from '@mui/material'
 import type { ChorusLine as ChorusLineType, WordToken } from '@/shared/types/chorus'
 
+const SELECTED_STYLE = {
+  backgroundColor: '#393740',
+  color: '#f8f8f8',
+}
+
 interface ChorusLineProps {
   line: ChorusLineType
   onWordClick: (e: React.MouseEvent<HTMLElement>, token: WordToken) => void
   showEnglish?: boolean
+  /** Token for the word that has the tooltip open (selected) */
+  selectedToken?: WordToken | null
 }
 
 /** Normalize word for token lookup: lowercase, trim punctuation */
@@ -18,7 +25,7 @@ function splitIntoWords(text: string): string[] {
   return text.split(/\s+/).filter(Boolean)
 }
 
-export function ChorusLine({ line, onWordClick, showEnglish = true }: ChorusLineProps) {
+export function ChorusLine({ line, onWordClick, showEnglish = true, selectedToken = null }: ChorusLineProps) {
   const tokenMap = useMemo(() => {
     const m = new Map<string, WordToken>()
     for (const t of line.tokens) {
@@ -43,8 +50,10 @@ export function ChorusLine({ line, onWordClick, showEnglish = true }: ChorusLine
             borderRadius: 1,
             px: 0.25,
             mx: -0.25,
-            '&:hover': {
-              backgroundColor: 'rgba(233, 213, 255, 0.15)',
+            transition: 'background-color 0.15s ease, color 0.15s ease',
+            '&:hover, &.chorus-word--selected': {
+              backgroundColor: SELECTED_STYLE.backgroundColor,
+              color: SELECTED_STYLE.color,
               cursor: 'pointer',
             },
           },
@@ -59,7 +68,7 @@ export function ChorusLine({ line, onWordClick, showEnglish = true }: ChorusLine
               {isClickable ? (
                 <ButtonBase
                   component="span"
-                  className="chorus-word"
+                  className={`chorus-word${selectedToken && token === selectedToken ? ' chorus-word--selected' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation()
                     token && onWordClick(e, token)
