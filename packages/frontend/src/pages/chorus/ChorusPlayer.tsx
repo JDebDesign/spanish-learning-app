@@ -184,7 +184,9 @@ export function ChorusPlayer() {
     <Box
       sx={{
         height: '100vh',
+        height: '100dvh',
         minHeight: '100vh',
+        minHeight: '100dvh',
         backgroundColor: '#05020a',
         display: 'flex',
         flexDirection: 'column',
@@ -193,14 +195,19 @@ export function ChorusPlayer() {
         overflow: 'hidden',
       }}
     >
-      {/* Header */}
+      {/* Header - sticky to top */}
       <Box
         component="header"
         sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
           flexShrink: 0,
           borderBottom: '1px solid #4a2f7a',
           py: 2,
           px: 3,
+          paddingTop: 'calc(16px + env(safe-area-inset-top, 0px))',
+          backgroundColor: '#05020a',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -283,18 +290,20 @@ export function ChorusPlayer() {
         </Box>
       </Box>
 
-      {/* Footer - Playback controls (sticky to bottom) */}
+      {/* Footer - sticky to bottom, safe area for iPhone home indicator */}
       <Paper
         elevation={0}
         component="footer"
         sx={{
           position: 'sticky',
           bottom: 0,
+          zIndex: 10,
           flexShrink: 0,
           borderTop: '1px solid #4a2f7a',
           backgroundColor: '#05020a',
           py: 2,
           px: 3,
+          paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
         }}
       >
         <Slider
