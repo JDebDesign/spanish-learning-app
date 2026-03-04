@@ -92,7 +92,7 @@ export function ChorusPlayer() {
       const audio = audioRef.current
       const mode = repeatMode
       const targetId = loopTargetLineId
-      if (!audio || mode === 'off' || !targetId) return
+      if (!audio || !targetId) return
 
       const ct = audio.currentTime
       if (ct < effectiveEnd) {
