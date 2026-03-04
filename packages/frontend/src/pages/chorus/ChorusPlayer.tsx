@@ -20,6 +20,7 @@ import RepeatOneIcon from '@mui/icons-material/RepeatOne'
 import { ChorusLine, CLICKABLE_WORD_SELECTOR } from './components/ChorusLine'
 import { WordTooltip } from './components/WordTooltip'
 import { useAudioPlayer } from '@/shared/hooks/useAudioPlayer'
+import { useWakeLockContext } from '@/shared/contexts/WakeLockContext'
 import { getActiveLineIndex } from '@/shared/utils/getActiveLineIndex'
 import { lyricsWithTiming } from '@/shared/data/lyricsTiming'
 import { mockChorusData, getTokensForLine } from '@/shared/data/mockChorus'
@@ -57,6 +58,7 @@ export function ChorusPlayer() {
   const lineRefsRef = useRef<(HTMLDivElement | null)[]>([])
   const lastLoopHandledRef = useRef<string | null>(null)
 
+  const { requestWakeLock } = useWakeLockContext()
   const mergedLines = getMergedLines()
 
   const handleTimeUpdate = useCallback((currentTime: number) => {
@@ -125,6 +127,7 @@ export function ChorusPlayer() {
 
   const handleLineClick = useCallback(
     (index: number, wasPlaying: boolean) => {
+      requestWakeLock()
       const line = lyricsWithTiming[index]
       if (!line) return
       seek(line.startMs / 1000)
@@ -138,7 +141,7 @@ export function ChorusPlayer() {
         audioRef.current?.play().catch(() => {})
       }
     },
-    [seek, audioRef, repeatMode]
+    [requestWakeLock, seek, audioRef, repeatMode]
   )
 
   const handleProgressChange = useCallback(
@@ -169,12 +172,14 @@ export function ChorusPlayer() {
   }, [repeatMode, activeLineIndex])
 
   const handleRestart = useCallback(() => {
+    requestWakeLock()
     seek(0)
     if (isPlaying) audioRef.current?.play().catch(() => {})
     linesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [seek, isPlaying, audioRef])
+  }, [requestWakeLock, seek, isPlaying, audioRef])
 
   const handleSkipPrevious = useCallback(() => {
+    requestWakeLock()
     const targetIndex = activeLineIndex <= 0 ? 0 : activeLineIndex - 1
     const line = lyricsWithTiming[targetIndex]
     if (!line) return
@@ -182,9 +187,10 @@ export function ChorusPlayer() {
     setActiveLineIndex(targetIndex)
     lastScrolledIndexRef.current = targetIndex
     if (isPlaying) audioRef.current?.play().catch(() => {})
-  }, [activeLineIndex, seek, isPlaying, audioRef])
+  }, [requestWakeLock, activeLineIndex, seek, isPlaying, audioRef])
 
   const handleSkipNext = useCallback(() => {
+    requestWakeLock()
     const lastIndex = lyricsWithTiming.length - 1
     const targetIndex = activeLineIndex < 0 ? 0 : Math.min(lastIndex, activeLineIndex + 1)
     const line = lyricsWithTiming[targetIndex]
@@ -193,7 +199,7 @@ export function ChorusPlayer() {
     setActiveLineIndex(targetIndex)
     lastScrolledIndexRef.current = targetIndex
     if (isPlaying) audioRef.current?.play().catch(() => {})
-  }, [activeLineIndex, seek, isPlaying, audioRef])
+  }, [requestWakeLock, activeLineIndex, seek, isPlaying, audioRef])
 
   const handleWordClick = useCallback((e: React.MouseEvent<HTMLElement>, token: WordToken) => {
     setTooltipAnchor(e.currentTarget)
@@ -443,7 +449,10 @@ export function ChorusPlayer() {
 
           {/* Center: Play - always perfectly centered */}
           <IconButton
-            onClick={toggle}
+            onClick={() => {
+              requestWakeLock()
+              toggle()
+            }}
             sx={{
               position: 'absolute',
               left: '50%',

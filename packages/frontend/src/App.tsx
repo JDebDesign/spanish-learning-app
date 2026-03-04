@@ -1,7 +1,12 @@
 import { ChorusPlayer } from '@/pages/chorus/ChorusPlayer'
+import { WakeLockProvider } from '@/shared/contexts/WakeLockContext'
 
 function App() {
-  return <ChorusPlayer />
+  return (
+    <WakeLockProvider>
+      <ChorusPlayer />
+    </WakeLockProvider>
+  )
 }
 
 export default App
