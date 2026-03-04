@@ -183,10 +183,9 @@ export function ChorusPlayer() {
   return (
     <Box
       sx={{
-        height: '100vh',
-        height: '100dvh',
+        height: '100vh', // 100dvh preferred for iOS; fallback for older browsers
         minHeight: '100vh',
-        minHeight: '100dvh',
+        '@supports (height: 100dvh)': { height: '100dvh', minHeight: '100dvh' },
         backgroundColor: '#05020a',
         display: 'flex',
         flexDirection: 'column',
