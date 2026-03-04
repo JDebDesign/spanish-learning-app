@@ -13,6 +13,8 @@ interface WordTooltipProps {
   onClose: () => void
   /** Volume for pronunciation (0–1). Uses music volume when provided. */
   volume?: number
+  /** If true, backdrop does not intercept clicks - parent handles outside-click */
+  disableBackdropClose?: boolean
 }
 
 function speakWord(word: string, volume: number = 1) {
@@ -52,20 +54,29 @@ const bodyStyle = {
   letterSpacing: '0.25px',
 } as const
 
-export function WordTooltip({ anchorEl, token, onClose, volume = 1 }: WordTooltipProps) {
+export function WordTooltip({ anchorEl, token, onClose, volume = 1, disableBackdropClose = false }: WordTooltipProps) {
   const open = Boolean(anchorEl) && Boolean(token)
 
   return (
     <Popover
       open={open}
       anchorEl={anchorEl}
-      onClose={onClose}
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      onClose={disableBackdropClose ? () => {} : onClose}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'center' }}
       slotProps={{
+        ...(disableBackdropClose && {
+          root: {
+            sx: {
+              pointerEvents: 'none',
+              '& .MuiPopover-paper': { pointerEvents: 'auto' },
+            },
+          },
+        }),
         paper: {
+          ...(disableBackdropClose && { 'data-tooltip-content': '' }),
           sx: {
-            mt: -1,
+            mt: 1,
             borderRadius: '12px',
             backgroundColor: '#f3edf7',
             boxShadow: '0px 1px 2px 0px rgba(0,0,0,0.3), 0px 2px 6px 2px rgba(0,0,0,0.15)',

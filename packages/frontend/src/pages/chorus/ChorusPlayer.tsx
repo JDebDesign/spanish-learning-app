@@ -14,7 +14,9 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
-import { ChorusLine } from './components/ChorusLine'
+import RepeatIcon from '@mui/icons-material/Repeat'
+import RepeatOneIcon from '@mui/icons-material/RepeatOne'
+import { ChorusLine, CLICKABLE_WORD_SELECTOR } from './components/ChorusLine'
 import { WordTooltip } from './components/WordTooltip'
 import { useAudioPlayer } from '@/shared/hooks/useAudioPlayer'
 import { getActiveLineIndex } from '@/shared/utils/getActiveLineIndex'
@@ -24,6 +26,10 @@ import { WaveformTimingTool } from './components/WaveformTimingTool'
 import type { WordToken } from '@/shared/types/chorus'
 
 const ENABLE_TIMING_TOOL = false
+
+type RepeatMode = 'off' | 'once' | 'forever'
+const REPEAT_CYCLE: RepeatMode[] = ['off', 'once', 'forever']
+const LOOP_EPSILON_S = 0.05
 
 /** Merge timing data with token data for word tooltips */
 function getMergedLines() {
@@ -40,11 +46,17 @@ export function ChorusPlayer() {
   const [showEnglish, setShowEnglish] = useState(true)
   const [volumeAnchor, setVolumeAnchor] = useState<HTMLElement | null>(null)
   const [volume, setVolume] = useState(1)
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>('off')
+  const [loopTargetLineId, setLoopTargetLineId] = useState<string | null>(null)
+  const [loopCount, setLoopCount] = useState(0)
   const volumeAutoHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const VOLUME_AUTO_HIDE_MS = 2500
   const lastScrolledIndexRef = useRef(-1)
   const linesContainerRef = useRef<HTMLDivElement>(null)
   const lineRefsRef = useRef<(HTMLDivElement | null)[]>([])
+  const lastLoopHandledRef = useRef<string | null>(null)
+
+  const mergedLines = getMergedLines()
 
   const handleTimeUpdate = useCallback((currentTime: number) => {
     const index = getActiveLineIndex(currentTime, lyricsWithTiming)
@@ -61,7 +73,43 @@ export function ChorusPlayer() {
     audioSrc,
   } = useAudioPlayer(handleTimeUpdate, volume)
 
-  const mergedLines = getMergedLines()
+  // Line-repeat loop: when playing and repeat on, seek back to loop start when we pass loop end
+  useEffect(() => {
+    if (!isPlaying || repeatMode === 'off' || !loopTargetLineId) return
+    const line = mergedLines.find((l) => l.id === loopTargetLineId)
+    if (!line || line.startMs == null || line.endMs == null) return
+    const loopStart = line.startMs / 1000
+    const loopEnd = line.endMs / 1000
+    if (currentTime < loopEnd - LOOP_EPSILON_S) {
+      lastLoopHandledRef.current = null
+      return
+    }
+    const key = `${loopTargetLineId}-${loopCount}`
+    if (lastLoopHandledRef.current === key) return
+    lastLoopHandledRef.current = key
+
+    if (repeatMode === 'forever') {
+      seek(loopStart)
+      audioRef.current?.play().catch(() => {})
+    } else if (repeatMode === 'once') {
+      if (loopCount === 0) {
+        seek(loopStart)
+        setLoopCount(1)
+        audioRef.current?.play().catch(() => {})
+      } else {
+        const idx = mergedLines.findIndex((l) => l.id === loopTargetLineId)
+        const nextLine = mergedLines[idx + 1]
+        if (nextLine) {
+          setLoopTargetLineId(nextLine.id)
+          setLoopCount(0)
+        } else {
+          setRepeatMode('off')
+          setLoopTargetLineId(null)
+          setLoopCount(0)
+        }
+      }
+    }
+  }, [isPlaying, repeatMode, loopTargetLineId, loopCount, currentTime, mergedLines, seek, audioRef])
   const { songTitle, artist } = mockChorusData
 
   // Scroll active line into view when it changes
@@ -81,11 +129,15 @@ export function ChorusPlayer() {
       seek(line.startMs / 1000)
       setActiveLineIndex(index)
       lastScrolledIndexRef.current = index
+      if (repeatMode !== 'off') {
+        setLoopTargetLineId(line.id)
+        setLoopCount(0)
+      }
       if (wasPlaying) {
         audioRef.current?.play().catch(() => {})
       }
     },
-    [seek, audioRef]
+    [seek, audioRef, repeatMode]
   )
 
   const handleProgressChange = useCallback(
@@ -95,6 +147,25 @@ export function ChorusPlayer() {
     },
     [seek]
   )
+
+  const handleRepeatClick = useCallback(() => {
+    const nextIndex = (REPEAT_CYCLE.indexOf(repeatMode) + 1) % REPEAT_CYCLE.length
+    const next = REPEAT_CYCLE[nextIndex]
+    setRepeatMode(next)
+    if (next !== 'off') {
+      const lineIndex = activeLineIndex >= 0 ? activeLineIndex : lastScrolledIndexRef.current
+      const line = lyricsWithTiming[lineIndex]
+      if (line) {
+        setLoopTargetLineId(line.id)
+        setLoopCount(0)
+      } else {
+        setLoopTargetLineId(null)
+      }
+    } else {
+      setLoopTargetLineId(null)
+      setLoopCount(0)
+    }
+  }, [repeatMode, activeLineIndex])
 
   const handleSkipPrevious = useCallback(() => {
     const targetIndex = activeLineIndex <= 0 ? 0 : activeLineIndex - 1
@@ -122,10 +193,31 @@ export function ChorusPlayer() {
     setTooltipToken(token)
   }, [])
 
+  /** Open/switch tooltip on pointerdown - runs before outside-click, so single tap switches */
+  const handleWordPointerDown = useCallback((element: HTMLElement, token: WordToken) => {
+    setTooltipAnchor(element)
+    setTooltipToken(token)
+  }, [])
+
   const handleTooltipClose = useCallback(() => {
     setTooltipAnchor(null)
     setTooltipToken(null)
   }, [])
+
+  // Custom outside-click: close only when target is NOT a clickable word and NOT inside tooltip
+  useEffect(() => {
+    const handlePointerDown = (e: PointerEvent) => {
+      if (!tooltipAnchor) return
+      const target = e.target as Node
+      if (target instanceof HTMLElement) {
+        if (target.closest(CLICKABLE_WORD_SELECTOR)) return
+        if (target.closest('[data-tooltip-content]') || target.closest('.MuiPopover-paper')) return
+      }
+      handleTooltipClose()
+    }
+    document.addEventListener('pointerdown', handlePointerDown, { capture: true })
+    return () => document.removeEventListener('pointerdown', handlePointerDown, { capture: true })
+  }, [tooltipAnchor, handleTooltipClose])
 
   useEffect(() => {
     if (window.speechSynthesis.getVoices().length === 0) {
@@ -275,7 +367,7 @@ export function ChorusPlayer() {
                     transition: 'all 0.2s ease',
                   }}
                 >
-                  <ChorusLine line={line} onWordClick={handleWordClick} showEnglish={showEnglish} selectedToken={tooltipToken} />
+                  <ChorusLine line={line} onWordClick={handleWordClick} onWordPointerDown={handleWordPointerDown} showEnglish={showEnglish} selectedToken={tooltipToken} />
                 </Box>
               </ButtonBase>
             )
@@ -342,6 +434,27 @@ export function ChorusPlayer() {
           >
             <SkipNextIcon />
           </IconButton>
+          <IconButton
+            onClick={handleRepeatClick}
+            sx={{
+              color: repeatMode === 'off' ? '#71717a' : '#e9d5ff',
+              ...(repeatMode !== 'off' && {
+                bgcolor: 'rgba(233, 213, 255, 0.2)',
+                boxShadow: '0 0 0 2px #e9d5ff',
+                '&:hover': { bgcolor: 'rgba(233, 213, 255, 0.3)' },
+              }),
+            }}
+            size="medium"
+            aria-label={
+              repeatMode === 'off'
+                ? 'Line repeat off'
+                : repeatMode === 'once'
+                  ? 'Repeat current line once'
+                  : 'Repeat current line'
+            }
+          >
+            {repeatMode === 'once' ? <RepeatOneIcon /> : <RepeatIcon />}
+          </IconButton>
         </Box>
         <audio
           ref={audioRef}
@@ -356,6 +469,7 @@ export function ChorusPlayer() {
         token={tooltipToken}
         onClose={handleTooltipClose}
         volume={volume}
+        disableBackdropClose
       />
 
       {/* Floating volume slider */}

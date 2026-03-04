@@ -7,9 +7,14 @@ const SELECTED_STYLE = {
   color: '#f8f8f8',
 }
 
+/** CSS selector for clickable lyric words - used by outside-click handler */
+export const CLICKABLE_WORD_SELECTOR = '[data-clickable-word]'
+
 interface ChorusLineProps {
   line: ChorusLineType
   onWordClick: (e: React.MouseEvent<HTMLElement>, token: WordToken) => void
+  /** Called on pointerdown to open/switch tooltip before outside-click closes it */
+  onWordPointerDown?: (element: HTMLElement, token: WordToken) => void
   showEnglish?: boolean
   /** Token for the word that has the tooltip open (selected) */
   selectedToken?: WordToken | null
@@ -25,7 +30,7 @@ function splitIntoWords(text: string): string[] {
   return text.split(/\s+/).filter(Boolean)
 }
 
-export function ChorusLine({ line, onWordClick, showEnglish = true, selectedToken = null }: ChorusLineProps) {
+export function ChorusLine({ line, onWordClick, onWordPointerDown, showEnglish = true, selectedToken = null }: ChorusLineProps) {
   const tokenMap = useMemo(() => {
     const m = new Map<string, WordToken>()
     for (const t of line.tokens) {
@@ -68,7 +73,15 @@ export function ChorusLine({ line, onWordClick, showEnglish = true, selectedToke
               {isClickable ? (
                 <ButtonBase
                   component="span"
+                  data-clickable-word
                   className={`chorus-word${selectedToken && token === selectedToken ? ' chorus-word--selected' : ''}`}
+                  onPointerDown={(e) => {
+                    if (onWordPointerDown && token) {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      onWordPointerDown(e.currentTarget as HTMLElement, token)
+                    }
+                  }}
                   onClick={(e) => {
                     e.stopPropagation()
                     token && onWordClick(e, token)
