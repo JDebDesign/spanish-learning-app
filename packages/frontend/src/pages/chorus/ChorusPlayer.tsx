@@ -10,6 +10,7 @@ import {
   ClickAwayListener,
 } from '@mui/material'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
+import FastRewindIcon from '@mui/icons-material/FastRewind'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
@@ -166,6 +167,12 @@ export function ChorusPlayer() {
       setLoopCount(0)
     }
   }, [repeatMode, activeLineIndex])
+
+  const handleRestart = useCallback(() => {
+    seek(0)
+    if (isPlaying) audioRef.current?.play().catch(() => {})
+    linesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [seek, isPlaying, audioRef])
 
   const handleSkipPrevious = useCallback(() => {
     const targetIndex = activeLineIndex <= 0 ? 0 : activeLineIndex - 1
@@ -404,18 +411,43 @@ export function ChorusPlayer() {
             '& .MuiSlider-thumb': { width: 12, height: 12 },
           }}
         />
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-          <IconButton
-            onClick={handleSkipPrevious}
-            sx={{ color: '#e9d5ff' }}
-            size="medium"
-            aria-label="Previous lyric"
-          >
-            <SkipPreviousIcon />
-          </IconButton>
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            minHeight: 40,
+          }}
+        >
+          {/* Left side: Restart (outer) → Previous (inner) */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'flex-end', pr: 7 }}>
+            <IconButton
+              onClick={handleRestart}
+              sx={{ color: '#e9d5ff' }}
+              size="medium"
+              aria-label="Restart song"
+            >
+              <SkipPreviousIcon />
+            </IconButton>
+            <IconButton
+              onClick={handleSkipPrevious}
+              sx={{ color: '#e9d5ff' }}
+              size="medium"
+              aria-label="Previous lyric"
+            >
+              <FastRewindIcon />
+            </IconButton>
+          </Box>
+
+          {/* Center: Play - always perfectly centered */}
           <IconButton
             onClick={toggle}
             sx={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
               bgcolor: '#e9d5ff',
               color: '#05020a',
               width: 40,
@@ -423,38 +455,43 @@ export function ChorusPlayer() {
               borderRadius: '20px',
               '&:hover': { bgcolor: '#f0dfff' },
             }}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? <PauseIcon sx={{ fontSize: 28 }} /> : <PlayArrowIcon sx={{ fontSize: 28 }} />}
           </IconButton>
-          <IconButton
-            onClick={handleSkipNext}
-            sx={{ color: '#e9d5ff' }}
-            size="medium"
-            aria-label="Next lyric"
-          >
-            <SkipNextIcon />
-          </IconButton>
-          <IconButton
-            onClick={handleRepeatClick}
-            sx={{
-              color: repeatMode === 'off' ? '#71717a' : '#e9d5ff',
-              ...(repeatMode !== 'off' && {
-                bgcolor: 'rgba(233, 213, 255, 0.2)',
-                boxShadow: '0 0 0 2px #e9d5ff',
-                '&:hover': { bgcolor: 'rgba(233, 213, 255, 0.3)' },
-              }),
-            }}
-            size="medium"
-            aria-label={
-              repeatMode === 'off'
-                ? 'Line repeat off'
-                : repeatMode === 'once'
-                  ? 'Repeat current line once'
-                  : 'Repeat current line'
-            }
-          >
-            {repeatMode === 'once' ? <RepeatOneIcon /> : <RepeatIcon />}
-          </IconButton>
+
+          {/* Right side: Next (inner) → Repeat (outer) */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'flex-start', pl: 7 }}>
+            <IconButton
+              onClick={handleSkipNext}
+              sx={{ color: '#e9d5ff' }}
+              size="medium"
+              aria-label="Next lyric"
+            >
+              <SkipNextIcon />
+            </IconButton>
+            <IconButton
+              onClick={handleRepeatClick}
+              sx={{
+                color: repeatMode === 'off' ? '#71717a' : '#e9d5ff',
+                ...(repeatMode !== 'off' && {
+                  bgcolor: 'rgba(233, 213, 255, 0.2)',
+                  boxShadow: '0 0 0 2px #e9d5ff',
+                  '&:hover': { bgcolor: 'rgba(233, 213, 255, 0.3)' },
+                }),
+              }}
+              size="medium"
+              aria-label={
+                repeatMode === 'off'
+                  ? 'Line repeat off'
+                  : repeatMode === 'once'
+                    ? 'Repeat current line once'
+                    : 'Repeat current line'
+              }
+            >
+              {repeatMode === 'once' ? <RepeatOneIcon /> : <RepeatIcon />}
+            </IconButton>
+          </Box>
         </Box>
         <audio
           ref={audioRef}
