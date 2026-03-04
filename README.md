@@ -29,11 +29,12 @@ Backend runs at http://localhost:8080. Health: http://localhost:8080/actuator/he
 
 ### One-time setup
 
-1. **GitHub repo** – `gh repo create spanish-learning-app --public --source=. --remote=origin --push`, or create manually and push
+1. **GitHub repo** – `gh repo create spanish-learning-app --public --source=. --remote=origin --push`, or create manually and push.  
+   If push fails with "refusing to allow an OAuth App to create workflow", run `gh auth refresh -s workflow -h github.com` to grant workflow scope, then `git push -u origin main`.
 2. **AWS Amplify** – Host web app → Connect GitHub → Select repo `spanish-learning-app`, branch `main`, build spec: `amplify.yml`
 3. **EC2 instance** – t3.micro, Amazon Linux 2023 or Ubuntu 22.04; allow SSH (22), HTTP (80), HTTPS (443), Custom TCP 8080
 4. **GitHub Secrets** – `PRODUCTION_SSH` (full `.pem` contents), `PRODUCTION_HOST` (EC2 IP), `PRODUCTION_USER` (`ec2-user` or `ubuntu`)
-5. **EC2 one-time** – Install Docker, clone repo to `~/spanish-app`, create `.env` (e.g. `echo "# Future env vars" > .env`)
+5. **EC2 one-time** – SSH into EC2, then run: `curl -sSL https://raw.githubusercontent.com/JDebDesign/spanish-learning-app/main/scripts/ec2-setup.sh | bash` (or see [scripts/ec2-setup.sh](scripts/ec2-setup.sh))
 
 ### Deploy
 
