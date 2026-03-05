@@ -38,6 +38,6 @@ export const SONG_DATA: Record<string, SongDataEntry> = {
   },
   'corazon-sin-cara': {
     lyrics: corazonSinCaraLyrics,
-    audioSrc: '/songs/corazon-sin-cara.mp3',
+    audioSrc: '/songs/corazon-sin-cara.mp3?v=3',
   },
 }

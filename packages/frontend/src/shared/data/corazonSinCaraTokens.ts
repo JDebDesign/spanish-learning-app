@@ -18,7 +18,7 @@ export const CORAZON_SIN_CARA_TOKENS: Record<string, WordToken[]> = {
     { spanishWord: 'Y', englishGloss: 'and', lemma: 'y', grammarNote: 'Conjunction' },
     { spanishWord: 'mira', englishGloss: 'look', lemma: 'mirar', grammarNote: 'Imperative', contextInSong: 'He tells her to look at herself.' },
     { spanishWord: 'el', englishGloss: 'the', lemma: 'el', grammarNote: 'Definite article' },
-    { spanishWord: 'espejo', englishGloss: 'mirror', lemma: 'espejo', grammarNote: 'Masculine singular noun' },
+    { spanishWord: 'espejo', englishGloss: 'mirror', lemma: 'espejo', grammarNote: 'Masculine singular noun', contextInSong: "He's telling her to look in the mirror—to see how beautiful she is without makeup." },
     { spanishWord: 'qué', englishGloss: 'how', lemma: 'qué', grammarNote: 'Interrogative' },
     { spanishWord: 'linda', englishGloss: 'beautiful', lemma: 'lindo', grammarNote: 'Feminine adjective', contextInSong: "She's beautiful without makeup." },
     { spanishWord: 'eres', englishGloss: "you're", lemma: 'ser', grammarNote: 'Second-person singular present' },
@@ -98,7 +98,7 @@ export const CORAZON_SIN_CARA_TOKENS: Record<string, WordToken[]> = {
     { spanishWord: 'tenemos', englishGloss: 'we have', lemma: 'tener', grammarNote: 'First-person plural present', contextInSong: "We have—the beautiful heart they share; he's telling her to thank God for it." },
     { spanishWord: 'ese', englishGloss: 'that', lemma: 'ese', grammarNote: 'Demonstrative adjective' },
     { spanishWord: 'lindo', englishGloss: 'beautiful', lemma: 'lindo', grammarNote: 'Masculine adjective' },
-    { spanishWord: 'corazón', englishGloss: 'heart', lemma: 'corazón', grammarNote: 'Masculine singular noun' },
+    { spanishWord: 'corazón', englishGloss: 'heart', lemma: 'corazón', grammarNote: 'Masculine singular noun', contextInSong: "The beautiful heart they share—he's telling her to thank God for their love." },
   ],
   'Prende una vela, pide perdón': [
     { spanishWord: 'Prende', englishGloss: 'light', lemma: 'prender', grammarNote: 'Imperative' },
