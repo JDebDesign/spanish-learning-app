@@ -84,7 +84,7 @@ export const TITI_ME_PREGUNTO_TOKENS: Record<string, WordToken[]> = {
   'Vamo\' a tirarnos un selfie, say "Cheese"': [
     { spanishWord: "Vamo'", englishGloss: "let's", lemma: 'ir', grammarNote: 'First-person plural (PR)' },
     { spanishWord: 'a', englishGloss: 'to', lemma: 'a', grammarNote: 'Preposition' },
-    { spanishWord: 'tirarnos', englishGloss: 'take ourselves', lemma: 'tirar', grammarNote: 'Infinitive + nos' },
+    { spanishWord: 'tirarnos', englishGloss: 'take ourselves (PR slang)', lemma: 'tirar', grammarNote: 'Infinitive + nos', contextInSong: 'PR slang for taking a photo.' },
     { spanishWord: 'un', englishGloss: 'a', lemma: 'uno', grammarNote: 'Indefinite article' },
     { spanishWord: 'selfie', englishGloss: 'selfie', lemma: 'selfie', grammarNote: 'Loanword' },
     { spanishWord: 'say', englishGloss: 'say', lemma: '-', grammarNote: 'English' },

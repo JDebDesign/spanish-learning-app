@@ -3,6 +3,7 @@ import { TELEPATIA_TOKENS } from './telepatiaTokens'
 import { BAILE_INOLVIDABLE_TOKENS } from './baileInolvidableTokens'
 import { LA_CANCION_TOKENS } from './laCancionTokens'
 import { TITI_ME_PREGUNTO_TOKENS } from './titiMePreguntoTokens'
+import { CORAZON_SIN_CARA_TOKENS } from './corazonSinCaraTokens'
 
 /** Token database keyed by spanishText - used for lines with detailed word glosses */
 const TOKEN_MAP: Record<string, WordToken[]> = {
@@ -60,13 +61,13 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
   ],
   'Y tirarte las fotos que no te tiré': [
     { spanishWord: 'Y', englishGloss: 'and', lemma: 'y', grammarNote: 'Conjunction' },
-    { spanishWord: 'tirarte', englishGloss: 'to take (for) you', lemma: 'tirar', grammarNote: 'Infinitive + te', contextInSong: 'Photos he wishes he had taken of her.' },
+    { spanishWord: 'tirarte', englishGloss: 'to take (for) you (PR slang)', lemma: 'tirar', grammarNote: 'Infinitive + te', contextInSong: 'PR slang for taking photos—photos he wishes he had taken of her.' },
     { spanishWord: 'las', englishGloss: 'the (feminine plural)', lemma: 'el', grammarNote: 'Definite article' },
     { spanishWord: 'fotos', englishGloss: 'photos', lemma: 'foto', grammarNote: 'Feminine plural noun', contextInSong: 'Memories he failed to capture—core regret of the song.' },
     { spanishWord: 'que', englishGloss: 'that', lemma: 'que', grammarNote: 'Relative pronoun' },
     { spanishWord: 'no', englishGloss: 'not', lemma: 'no', grammarNote: 'Negative adverb' },
     { spanishWord: 'te', englishGloss: 'you (informal object)', lemma: 'tú', grammarNote: 'Second-person object pronoun' },
-    { spanishWord: 'tiré', englishGloss: 'I took', lemma: 'tirar', grammarNote: 'First-person singular preterite', contextInSong: 'What he didn\'t do when he had the chance.' },
+    { spanishWord: 'tiré', englishGloss: 'I took (PR slang)', lemma: 'tirar', grammarNote: 'First-person singular preterite', contextInSong: 'PR slang for taking photos—what he didn\'t do when he had the chance.' },
   ],
   'Que a los ojos te miré y contarte las cosas que no te conté': [
     { spanishWord: 'Que', englishGloss: 'that', lemma: 'que', grammarNote: 'Conjunction', contextInSong: 'The moment he\'s trying to return to.' },
@@ -126,7 +127,7 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
     { spanishWord: 'tranquilo', englishGloss: 'chill / calm', lemma: 'tranquilo', grammarNote: 'Masculine adjective', contextInSong: 'Trying to stay calm despite the pain.' },
   ],
   "Vamo' a disfrutar, que nunca se sabe si nos queda poco… Debí tirar más f-": [
-    { spanishWord: "Vamo'", englishGloss: "let's", lemma: 'ir', grammarNote: 'First-person plural imperative', contextInSong: 'Live in the moment—you never know how much time is left.' },
+    { spanishWord: "Vamo'", englishGloss: "let's", lemma: 'ir', grammarNote: 'First-person plural (PR)', contextInSong: "PR slang for 'vamos'—live in the moment, you never know how much time is left." },
     { spanishWord: 'a', englishGloss: 'to', lemma: 'a', grammarNote: 'Preposition' },
     { spanishWord: 'disfrutar', englishGloss: 'enjoy', lemma: 'disfrutar', grammarNote: 'Infinitive', contextInSong: 'Theme of the song—enjoy before it\'s too late.' },
     { spanishWord: 'que', englishGloss: 'because', lemma: 'que', grammarNote: 'Conjunction', contextInSong: 'You never know if little time remains.' },
@@ -149,7 +150,7 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
   ],
   'Debí tirar más fotos de cuando te tuve': [
     { spanishWord: 'Debí', englishGloss: 'I should have', lemma: 'deber', grammarNote: 'First-person singular preterite', contextInSong: 'The singer regrets not taking more photos of someone he loved.' },
-    { spanishWord: 'tirar', englishGloss: 'to take', lemma: 'tirar', grammarNote: 'Infinitive', contextInSong: 'Refers to taking photos in this nostalgic context.' },
+    { spanishWord: 'tirar', englishGloss: 'to take (PR slang)', lemma: 'tirar', grammarNote: 'Infinitive', contextInSong: 'PR slang for taking photos—refers to photos in this nostalgic context.' },
     { spanishWord: 'más', englishGloss: 'more', lemma: 'más', grammarNote: 'Comparative adverb' },
     { spanishWord: 'fotos', englishGloss: 'photos', lemma: 'foto', grammarNote: 'Feminine plural noun' },
     { spanishWord: 'de', englishGloss: 'of / from', lemma: 'de', grammarNote: 'Preposition' },
@@ -361,7 +362,7 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
     { spanishWord: 'las', englishGloss: 'the (feminine plural)', lemma: 'el', grammarNote: 'Definite article' },
     { spanishWord: 'babies', englishGloss: 'babes', lemma: 'baby', grammarNote: 'Loanword', contextInSong: 'The women at the party.' },
     { spanishWord: 'diablo', englishGloss: 'damn / devil', lemma: 'diablo', grammarNote: 'Masculine noun', contextInSong: 'Slang exclamation—wow, damn.' },
-    { spanishWord: 'mami', englishGloss: 'mommy / babe', lemma: 'mami', grammarNote: 'Feminine noun', contextInSong: 'Caribbean term for an attractive woman.' },
+    { spanishWord: 'mami', englishGloss: 'mommy / babe (slang)', lemma: 'mami', grammarNote: 'Feminine noun', contextInSong: 'Caribbean slang for an attractive woman.' },
     { spanishWord: 'qué', englishGloss: 'how', lemma: 'qué', grammarNote: 'Interrogative' },
     { spanishWord: 'dulce', englishGloss: 'sweet', lemma: 'dulce', grammarNote: 'Adjective', contextInSong: 'How sweet/beautiful they are.' },
   ],
@@ -418,12 +419,12 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
   "Así que vamo' pa' la foto, vengan pa' acá": [
     { spanishWord: 'Así', englishGloss: 'so', lemma: 'así', grammarNote: 'Adverb' },
     { spanishWord: 'que', englishGloss: 'that', lemma: 'que', grammarNote: 'Conjunction' },
-    { spanishWord: "vamo'", englishGloss: "let's go", lemma: 'ir', grammarNote: 'First-person plural imperative' },
-    { spanishWord: "pa'", englishGloss: 'for', lemma: 'para', grammarNote: 'Preposition' },
+    { spanishWord: "vamo'", englishGloss: "let's go", lemma: 'ir', grammarNote: 'First-person plural (PR)', contextInSong: "PR slang for 'vamos'—let's go for the photo." },
+    { spanishWord: "pa'", englishGloss: 'for', lemma: 'para', grammarNote: 'Preposition (PR)', contextInSong: "PR slang for 'para'—for the photo." },
     { spanishWord: 'la', englishGloss: 'the (feminine)', lemma: 'el', grammarNote: 'Definite article' },
     { spanishWord: 'foto', englishGloss: 'photo', lemma: 'foto', grammarNote: 'Feminine singular noun', contextInSong: 'Group photo with the crowd.' },
     { spanishWord: 'vengan', englishGloss: 'come', lemma: 'venir', grammarNote: 'Third-person plural imperative', contextInSong: 'Come over here for the picture.' },
-    { spanishWord: "pa'", englishGloss: 'to', lemma: 'para', grammarNote: 'Preposition' },
+    { spanishWord: "pa'", englishGloss: 'to', lemma: 'para', grammarNote: 'Preposition (PR)', contextInSong: "PR slang for 'para'—come over here." },
     { spanishWord: "acá", englishGloss: 'here', lemma: 'aquí', grammarNote: 'Adverb', contextInSong: 'Over here—gathering for the photo.' },
   ],
   "Métanse to' el mundo, to' el corillo, vamo'": [
@@ -434,7 +435,7 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
     { spanishWord: "to'", englishGloss: 'all', lemma: 'todo', grammarNote: 'PR slang' },
     { spanishWord: 'el', englishGloss: 'the (masculine)', lemma: 'el', grammarNote: 'Definite article' },
     { spanishWord: 'corillo', englishGloss: 'crew / group', lemma: 'corillo', grammarNote: 'Masculine noun', contextInSong: 'PR slang—the whole crew.' },
-    { spanishWord: "vamo'", englishGloss: "let's go", lemma: 'ir', grammarNote: 'Imperative' },
+    { spanishWord: "vamo'", englishGloss: "let's go", lemma: 'ir', grammarNote: 'Imperative (PR)', contextInSong: "PR slang for 'vamos'—let's go, everybody in." },
   ],
   'Zumba': [
     { spanishWord: 'Zumba', englishGloss: 'Zumba', lemma: '-', grammarNote: 'Proper noun', contextInSong: 'Photo caption—everyone say Zumba!' },
@@ -454,7 +455,7 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
     { spanishWord: 'Ya', englishGloss: 'anymore', lemma: 'ya', grammarNote: 'Adverb' },
     { spanishWord: 'no', englishGloss: 'not', lemma: 'no', grammarNote: 'Negative adverb' },
     { spanishWord: 'estamos', englishGloss: 'we are', lemma: 'estar', grammarNote: 'First-person plural present' },
-    { spanishWord: "pa'", englishGloss: 'for', lemma: 'para', grammarNote: 'Preposition' },
+    { spanishWord: "pa'", englishGloss: 'for', lemma: 'para', grammarNote: 'Preposition (PR)', contextInSong: "PR slang for 'para'—we're not for movies anymore." },
     { spanishWord: 'las', englishGloss: 'the (feminine plural)', lemma: 'el', grammarNote: 'Definite article' },
     { spanishWord: "movie'", englishGloss: 'movies', lemma: 'movie', grammarNote: 'Loanword', contextInSong: 'We\'re not about superficial stuff anymore.' },
     { spanishWord: 'y', englishGloss: 'and', lemma: 'y', grammarNote: 'Conjunction' },
@@ -463,7 +464,7 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
   ],
   "Estamos pa' las cosas que valgan la pena": [
     { spanishWord: 'Estamos', englishGloss: 'we are', lemma: 'estar', grammarNote: 'First-person plural present' },
-    { spanishWord: "pa'", englishGloss: 'for', lemma: 'para', grammarNote: 'Preposition' },
+    { spanishWord: "pa'", englishGloss: 'for', lemma: 'para', grammarNote: 'Preposition (PR)', contextInSong: "PR slang for 'para'—we're for things that matter." },
     { spanishWord: 'las', englishGloss: 'the (feminine plural)', lemma: 'el', grammarNote: 'Definite article' },
     { spanishWord: 'cosas', englishGloss: 'things', lemma: 'cosa', grammarNote: 'Feminine plural noun' },
     { spanishWord: 'que', englishGloss: 'that', lemma: 'que', grammarNote: 'Relative pronoun' },
@@ -473,7 +474,7 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
   ],
   "Ey, pa'l perreo, la salsa, la bomba y la plena": [
     { spanishWord: 'Ey', englishGloss: 'hey', lemma: 'ey', grammarNote: 'Interjection' },
-    { spanishWord: "pa'l", englishGloss: "for the", lemma: 'para el', grammarNote: 'Contraction' },
+    { spanishWord: "pa'l", englishGloss: "for the", lemma: 'para el', grammarNote: 'Contraction (PR)', contextInSong: "PR slang for 'para el'—for the perreo." },
     { spanishWord: 'perreo', englishGloss: 'perreo (dance)', lemma: 'perreo', grammarNote: 'Masculine noun', contextInSong: 'Reggaeton dance—PR culture.' },
     { spanishWord: 'la', englishGloss: 'the (feminine)', lemma: 'el', grammarNote: 'Definite article' },
     { spanishWord: 'salsa', englishGloss: 'salsa', lemma: 'salsa', grammarNote: 'Feminine singular noun', contextInSong: 'Salsa music—Puerto Rican tradition.' },
@@ -507,6 +508,7 @@ const TOKEN_MAP: Record<string, WordToken[]> = {
   ...BAILE_INOLVIDABLE_TOKENS,
   ...LA_CANCION_TOKENS,
   ...TITI_ME_PREGUNTO_TOKENS,
+  ...CORAZON_SIN_CARA_TOKENS,
 }
 
 /** Normalize word for lookup: lowercase, trim, remove trailing punctuation. */

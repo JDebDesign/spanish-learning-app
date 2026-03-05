@@ -8,6 +8,7 @@ import { telepatiaLyrics } from './telepatiaLyrics'
 import { baileInolvidableLyrics } from './baileInolvidableLyrics'
 import { laCancionLyrics } from './laCancionLyrics'
 import { titiMePreguntoLyrics } from './titiMePreguntoLyrics'
+import { corazonSinCaraLyrics } from './corazonSinCaraLyrics'
 
 export interface SongDataEntry {
   lyrics: LyricLineTiming[]
@@ -34,5 +35,9 @@ export const SONG_DATA: Record<string, SongDataEntry> = {
   'titi-me-pregunto': {
     lyrics: titiMePreguntoLyrics,
     audioSrc: '/songs/titi-me-pregunto.mp3',
+  },
+  'corazon-sin-cara': {
+    lyrics: corazonSinCaraLyrics,
+    audioSrc: '/songs/corazon-sin-cara.mp3',
   },
 }

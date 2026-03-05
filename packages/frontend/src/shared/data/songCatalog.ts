@@ -16,4 +16,5 @@ export const SONG_CATALOG: SongEntry[] = [
   { id: 'baile-inolvidable', title: 'Baile Inolvidable', artist: 'Bad Bunny', hasData: true },
   { id: 'la-cancion', title: 'La Canción', artist: 'J Balvin & Bad Bunny', hasData: true },
   { id: 'titi-me-pregunto', title: 'Tití Me Preguntó', artist: 'Bad Bunny', hasData: true },
+  { id: 'corazon-sin-cara', title: 'Corazón Sin Cara', artist: 'Prince Royce', hasData: true },
 ]

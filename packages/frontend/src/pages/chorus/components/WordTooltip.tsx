@@ -141,10 +141,20 @@ function getContextFallback(token: WordToken): string {
   return `Means "${gloss}" in this line.`
 }
 
-/** Check if token indicates slang (grammarNote or gloss) */
+/** Check if token indicates slang (grammarNote, gloss, or contextInSong) */
 function isSlang(token: WordToken): boolean {
   const g = (token.grammarNote || '').toLowerCase()
-  return g.includes('slang') || token.englishGloss.toLowerCase().includes('(slang)')
+  const gloss = (token.englishGloss || '').toLowerCase()
+  const ctx = (token.contextInSong || '').toLowerCase()
+  return (
+    g.includes('slang') ||
+    gloss.includes('(slang)') ||
+    gloss.includes('(pr slang)') ||
+    g.includes('puerto rican') ||
+    g.includes('(pr)') ||
+    g.includes('pr slang') ||
+    ctx.includes('slang')
+  )
 }
 
 /** Get clean gloss (strip "(slang)" suffix) */
@@ -152,16 +162,27 @@ function getCleanGloss(token: WordToken): string {
   return token.englishGloss.replace(/\s*\(slang\)\s*/gi, '').replace(/\s*\(PR slang\)\s*/gi, '').trim()
 }
 
-/** Final context text: ensure slang words say "Slang for..." when contextInSong doesn't */
+/** Get slang label: "Slang" or "PR slang" based on token */
+function getSlangLabel(token: WordToken): string {
+  const g = (token.grammarNote || '').toLowerCase()
+  const ctx = (token.contextInSong || '').toLowerCase()
+  if (g.includes('puerto rican') || g.includes('(pr)') || g.includes('pr slang') || ctx.includes('pr slang')) {
+    return 'PR slang'
+  }
+  return 'Slang'
+}
+
+/** Final context text: ensure slang words always have a slang call-out in the popover */
 function getContextDisplayText(token: WordToken): string {
   const hasContext = token.contextInSong && token.contextInSong.trim() !== ''
   const context = hasContext ? token.contextInSong! : getContextFallback(token)
 
   if (!isSlang(token)) return context
-  if (/slang|Slang for/i.test(context)) return context
+  if (/slang|Slang for|PR slang/i.test(context)) return context
 
   const cleanGloss = getCleanGloss(token)
-  return `Slang for ${cleanGloss}. ${context}`
+  const label = getSlangLabel(token)
+  return `${label} for ${cleanGloss}. ${context}`
 }
 
 /** Label style: #958da5, 14px, medium */

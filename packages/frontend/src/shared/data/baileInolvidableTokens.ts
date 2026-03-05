@@ -99,7 +99,7 @@ export const BAILE_INOLVIDABLE_TOKENS: Record<string, WordToken[]> = {
   "Y ver pa'l cielo a ver si te veo caer": [
     { spanishWord: 'Y', englishGloss: 'and', lemma: 'y', grammarNote: 'Conjunction' },
     { spanishWord: 'ver', englishGloss: 'look', lemma: 'ver', grammarNote: 'Infinitive' },
-    { spanishWord: "pa'l", englishGloss: "to the", lemma: 'para el', grammarNote: 'Contraction (pa\'l = para el)', contextInSong: 'Look at the sky.' },
+    { spanishWord: "pa'l", englishGloss: "to the", lemma: 'para el', grammarNote: 'Contraction (PR)', contextInSong: "PR slang for 'para el'—look at the sky." },
     { spanishWord: 'cielo', englishGloss: 'sky', lemma: 'cielo', grammarNote: 'Masculine singular noun' },
     { spanishWord: 'a', englishGloss: 'to', lemma: 'a', grammarNote: 'Preposition' },
     { spanishWord: 'ver', englishGloss: 'see', lemma: 'ver', grammarNote: 'Infinitive' },
@@ -141,7 +141,7 @@ export const BAILE_INOLVIDABLE_TOKENS: Record<string, WordToken[]> = {
     { spanishWord: 'cómo', englishGloss: 'how', lemma: 'cómo', grammarNote: 'Interrogative adverb' },
     { spanishWord: 'le', englishGloss: '(indirect object)', lemma: 'le', grammarNote: 'Indirect object pronoun' },
     { spanishWord: 'hago', englishGloss: 'I do', lemma: 'hacer', grammarNote: 'First-person singular present' },
-    { spanishWord: "pa'", englishGloss: 'to', lemma: 'para', grammarNote: 'Contraction', contextInSong: "How can I forget you?" },
+    { spanishWord: "pa'", englishGloss: 'to', lemma: 'para', grammarNote: 'Contraction (PR)', contextInSong: "PR slang for 'para'—how can I forget you?" },
     { spanishWord: 'olvidarte', englishGloss: 'forget you', lemma: 'olvidar', grammarNote: 'Infinitive + te' },
   ],
   'Hay un paso nuevo que quiero enseñarte': [
@@ -231,7 +231,7 @@ export const BAILE_INOLVIDABLE_TOKENS: Record<string, WordToken[]> = {
     { spanishWord: 'cabrón', englishGloss: 'badass (slang)', lemma: 'cabrón', grammarNote: 'Puerto Rican Spanish', contextInSong: "This sounds amazing." },
   ],
   "Vamo' a hacerlo otra vez": [
-    { spanishWord: "Vamo'", englishGloss: "let's", lemma: 'ir', grammarNote: 'First-person plural (contraction)', contextInSong: "Let's do it again." },
+    { spanishWord: "Vamo'", englishGloss: "let's", lemma: 'ir', grammarNote: 'First-person plural (PR)', contextInSong: "PR slang for 'vamos'—let's do it again." },
     { spanishWord: 'a', englishGloss: 'to', lemma: 'a', grammarNote: 'Preposition' },
     { spanishWord: 'hacerlo', englishGloss: 'do it', lemma: 'hacer', grammarNote: 'Infinitive + lo' },
     { spanishWord: 'otra', englishGloss: 'another', lemma: 'otro', grammarNote: 'Feminine singular adjective' },
@@ -243,14 +243,14 @@ export const BAILE_INOLVIDABLE_TOKENS: Record<string, WordToken[]> = {
   ],
   "Aprieta, chamaquito, aprieta": [
     { spanishWord: 'Aprieta', englishGloss: 'hold on tight', lemma: 'apretar', grammarNote: 'Imperative', contextInSong: 'Salsa call—hold on to your partner.' },
-    { spanishWord: 'chamaquito', englishGloss: 'kid (affectionate)', lemma: 'chamaco', grammarNote: 'Puerto Rican Spanish' },
+    { spanishWord: 'chamaquito', englishGloss: 'kid (affectionate)', lemma: 'chamaco', grammarNote: 'Puerto Rican Spanish', contextInSong: 'PR slang—affectionate term for kid, hold on tight.' },
     { spanishWord: 'aprieta', englishGloss: 'hold on', lemma: 'apretar', grammarNote: 'Imperative' },
   ],
   "¡Ahí, ahí, ahí, vamo' allá!": [
     { spanishWord: 'Ahí', englishGloss: 'there', lemma: 'ahí', grammarNote: 'Adverb' },
     { spanishWord: 'ahí', englishGloss: 'there', lemma: 'ahí', grammarNote: 'Adverb' },
     { spanishWord: 'ahí', englishGloss: 'there', lemma: 'ahí', grammarNote: 'Adverb' },
-    { spanishWord: "vamo'", englishGloss: "let's go", lemma: 'ir', grammarNote: 'Contraction' },
+    { spanishWord: "vamo'", englishGloss: "let's go", lemma: 'ir', grammarNote: 'Contraction (PR)', contextInSong: "PR slang for 'vamos'—let's go there!" },
     { spanishWord: 'allá', englishGloss: 'there', lemma: 'allá', grammarNote: 'Adverb', contextInSong: "Salsa call—let's go!" },
   ],
   'Ay, yo con cualquiera me puedo acostar': [
@@ -280,7 +280,7 @@ export const BAILE_INOLVIDABLE_TOKENS: Record<string, WordToken[]> = {
     { spanishWord: 'bailo', englishGloss: 'dance', lemma: 'bailar', grammarNote: 'First-person singular present' },
     { spanishWord: 'con', englishGloss: 'with', lemma: 'con', grammarNote: 'Preposition' },
     { spanishWord: 'usted', englishGloss: 'you (formal)', lemma: 'usted', grammarNote: 'Formal pronoun' },
-    { spanishWord: "na'", englishGloss: 'nothing', lemma: 'nada', grammarNote: 'Contraction (na\' = nada)' },
+    { spanishWord: "na'", englishGloss: 'nothing', lemma: 'nada', grammarNote: 'Contraction (PR)', contextInSong: "PR slang for 'nada'—nothing more, only you." },
     { spanishWord: 'más', englishGloss: 'more', lemma: 'más', grammarNote: 'Adverb' },
     { spanishWord: 'con', englishGloss: 'with', lemma: 'con', grammarNote: 'Preposition' },
     { spanishWord: 'usted', englishGloss: 'you (formal)', lemma: 'usted', grammarNote: 'Formal pronoun', contextInSong: "He dances only with her." },

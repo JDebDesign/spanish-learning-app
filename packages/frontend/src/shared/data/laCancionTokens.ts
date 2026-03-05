@@ -54,7 +54,7 @@ export const LA_CANCION_TOKENS: Record<string, WordToken[]> = {
   "Que por comerme a do' o diez, te olvidaría' (Yeh)": [
     { spanishWord: 'Que', englishGloss: 'that', lemma: 'que', grammarNote: 'Conjunction' },
     { spanishWord: 'por', englishGloss: 'by', lemma: 'por', grammarNote: 'Preposition' },
-    { spanishWord: 'comerme', englishGloss: 'having', lemma: 'comer', grammarNote: 'Infinitive + me', contextInSong: "By hooking up with two or ten women he'd forget her." },
+    { spanishWord: 'comerme', englishGloss: 'having (slang)', lemma: 'comer', grammarNote: 'Infinitive + me', contextInSong: "Slang for hooking up—by being with two or ten women he'd forget her." },
     { spanishWord: 'a', englishGloss: 'to', lemma: 'a', grammarNote: 'Preposition' },
     { spanishWord: "do'", englishGloss: 'two', lemma: 'dos', grammarNote: 'Number (PR)' },
     { spanishWord: 'o', englishGloss: 'or', lemma: 'o', grammarNote: 'Conjunction' },
