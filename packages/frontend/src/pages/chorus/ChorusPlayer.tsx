@@ -8,6 +8,8 @@ import {
   Popover,
   ClickAwayListener,
   Snackbar,
+  Switch,
+  Typography,
 } from '@mui/material'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
 import FastRewindIcon from '@mui/icons-material/FastRewind'
@@ -349,27 +351,54 @@ export function ChorusPlayer() {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <IconButton
-              size="small"
-              onClick={() => {
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start', justifyContent: 'center' }}>
+            <Typography
+              sx={{
+                fontFamily: '"Inter", sans-serif',
+                fontWeight: 500,
+                fontSize: 14,
+                lineHeight: '16.8px',
+                color: '#c7b8e6',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Show English
+            </Typography>
+            <Switch
+              checked={showEnglish}
+              onChange={() => {
                 const next = !showEnglish
                 setShowEnglish(next)
                 showToast(next ? 'English shown' : 'English hidden')
               }}
-              sx={{
-                color: showEnglish ? '#e9d5ff' : '#71717a',
-                bgcolor: showEnglish ? 'rgba(233, 213, 255, 0.15)' : 'transparent',
-                fontWeight: 600,
-                fontSize: 12,
-                minWidth: 34,
-                '&:hover': { bgcolor: showEnglish ? 'rgba(233, 213, 255, 0.25)' : 'rgba(113, 113, 122, 0.2)' },
-              }}
-              aria-pressed={showEnglish}
               aria-label={showEnglish ? 'Hide English (difficult mode)' : 'Show English'}
-            >
-              EN
-            </IconButton>
+              sx={{
+                width: 52,
+                height: 32,
+                p: 0,
+                '& .MuiSwitch-switchBase': {
+                  p: '2px',
+                  '&.Mui-checked': {
+                    transform: 'translateX(20px)',
+                    color: '#fff',
+                    '& + .MuiSwitch-track': {
+                      bgcolor: '#6750a4',
+                      opacity: 1,
+                    },
+                  },
+                },
+                '& .MuiSwitch-thumb': {
+                  width: 28,
+                  height: 28,
+                  boxShadow: 'none',
+                },
+                '& .MuiSwitch-track': {
+                  borderRadius: 100,
+                  bgcolor: '#49454f',
+                  opacity: 1,
+                },
+              }}
+            />
           </Box>
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', px: 1 }}>
             <SongDropdown
